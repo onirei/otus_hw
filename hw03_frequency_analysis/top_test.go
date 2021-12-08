@@ -43,9 +43,44 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+var engText = "cat and dog, one dog,two cats and one man"
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10("", taskWithAsteriskIsCompleted), 0)
+	})
+
+	t.Run("length eng text taskWithAsteriskIsCompleted is true", func(t *testing.T) {
+		require.Len(t, Top10(engText, taskWithAsteriskIsCompleted), 6)
+	})
+
+	t.Run("eng text taskWithAsteriskIsCompleted is true", func(t *testing.T) {
+		expected := []string{
+			"and",  // 2
+			"dog",  // 2
+			"one",  // 2
+			"cat",  // 1
+			"cats", // 1
+			"man",  // 1
+		}
+		require.Equal(t, expected, Top10(engText, taskWithAsteriskIsCompleted))
+	})
+
+	t.Run("length eng text taskWithAsteriskIsCompleted is false", func(t *testing.T) {
+		require.Len(t, Top10(engText, !taskWithAsteriskIsCompleted), 7)
+	})
+
+	t.Run("eng text taskWithAsteriskIsCompleted is false", func(t *testing.T) {
+		expected := []string{
+			"and",     // 2
+			"one",     // 2
+			"cat",     // 1
+			"cats",    // 1
+			"dog,",    // 1
+			"dog,two", // 1
+			"man",     // 1
+		}
+		require.Equal(t, expected, Top10(engText, !taskWithAsteriskIsCompleted))
 	})
 
 	t.Run("positive test taskWithAsteriskIsCompleted is true", func(t *testing.T) {
@@ -61,9 +96,9 @@ func TestTop10(t *testing.T) {
 			"кристофер", // 4
 			"не",        // 4
 		}
-
 		require.Equal(t, expected, Top10(text, taskWithAsteriskIsCompleted))
 	})
+
 	t.Run("positive test taskWithAsteriskIsCompleted is false", func(t *testing.T) {
 		expected := []string{
 			"он",        // 8
@@ -77,7 +112,6 @@ func TestTop10(t *testing.T) {
 			"не",        // 4
 			"то",        // 4
 		}
-		taskWithAsteriskIsCompleted = false
-		require.Equal(t, expected, Top10(text, taskWithAsteriskIsCompleted))
+		require.Equal(t, expected, Top10(text, !taskWithAsteriskIsCompleted))
 	})
 }

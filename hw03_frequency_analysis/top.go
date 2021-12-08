@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	withAsteriskIsCompleted    = regexp.MustCompile(`[А-Яа-я-,.]+`)
-	withoutAsteriskIsCompleted = regexp.MustCompile(`[А-Яа-я]+-*[А-Яа-я]*`)
+	withAsteriskIsCompleted    = regexp.MustCompile(`[A-Za-zА-Яа-я-,.]+`)
+	withoutAsteriskIsCompleted = regexp.MustCompile(`[A-Za-zА-Яа-я]+-*[А-Яа-я]*`)
 )
 
 func Top10(text string, taskWithAsteriskIsCompleted bool) []string {
@@ -43,10 +43,12 @@ func Top10(text string, taskWithAsteriskIsCompleted bool) []string {
 		return (d[i].Weight == d[j].Weight && d[i].Word < d[j].Word) || d[i].Weight > d[j].Weight
 	})
 	var strArray []string
-	if len(d) > 10 {
-		for i := 0; i < 10; i++ {
-			strArray = append(strArray, d[i].Word)
+	for i := 0; ; i++ {
+		if i == 10 || i == len(d) {
+			break
 		}
+		strArray = append(strArray, d[i].Word)
 	}
+
 	return strArray
 }
